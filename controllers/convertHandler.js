@@ -4,7 +4,9 @@ function ConvertHandler() {
     let result;
     
     // Extract the numeric part from the input
-    let numString = input.match(/^[^a-zA-Z]*/)[0];
+    // Look for the first character that is a letter
+    let firstLetterIdx = input.search(/[a-zA-Z]/);
+    let numString = firstLetterIdx === -1 ? input : input.slice(0, firstLetterIdx);
     
     // If no number provided, default to 1
     if (!numString) {
@@ -20,6 +22,10 @@ function ConvertHandler() {
     // Handle fractions
     if (numString.includes('/')) {
       const parts = numString.split('/');
+      // Ensure there are exactly two parts and both are valid numbers
+      if (parts.length !== 2 || parts[0] === '' || parts[1] === '') {
+          return 'invalid number';
+      }
       const numerator = parseFloat(parts[0]);
       const denominator = parseFloat(parts[1]);
       
@@ -38,18 +44,17 @@ function ConvertHandler() {
     
     return result;
   };
-  
+
   this.getUnit = function(input) {
     let result;
     
-    // Extract the unit part from the input (everything after the number)
-    let unitString = input.match(/[a-zA-Z]+$/);
-    
-    if (!unitString) {
+    // Extract the unit part from the input (everything from the first letter to the end)
+    let firstLetterIdx = input.search(/[a-zA-Z]/);
+    if (firstLetterIdx === -1) {
       return 'invalid unit';
     }
     
-    unitString = unitString[0].toLowerCase();
+    let unitString = input.slice(firstLetterIdx).toLowerCase();
     
     const validUnits = ['gal', 'l', 'mi', 'km', 'lbs', 'kg'];
     
@@ -103,11 +108,11 @@ function ConvertHandler() {
     const miToKm = 1.60934;
     let result;
     
-    switch(initUnit) {
+    switch(initUnit.toLowerCase()) {
       case 'gal':
         result = initNum * galToL;
         break;
-      case 'L':
+      case 'l':
         result = initNum / galToL;
         break;
       case 'mi':
