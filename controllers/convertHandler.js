@@ -133,7 +133,7 @@ function ConvertHandler() {
     
     // Round to 5 decimal places
     if (result !== undefined) {
-      result = Math.round(result * 100000) / 100000;
+      result = parseFloat(result.toFixed(5));
     }
     
     return result;

@@ -18,6 +18,11 @@ app.use(cors({origin: '*'})); //For FCC testing purposes only
 
 app.set('trust proxy', true);
 
+app.use(function(req, res, next) {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  next();
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
